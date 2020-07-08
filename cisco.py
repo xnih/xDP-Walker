@@ -320,7 +320,7 @@ def main ():
   if (ignore == True):
     IgnoreList = []
   else:
-    IgnoreList = ['FAS6220', 'FAS8020', 'FAS8060', 'FAS8200', 'N10-S6100', 'UCS-FI-6', 'VMware ESX', 'cisco AIR-CAP', 'cisco AIR-AP', 'cisco AIR-LAP', 'Cisco IP Phone', 'Communicator (', 'Cisco ATA 1', 'Polycom SoundPoint IP', 'Polycom VVX']
+    IgnoreList = ['FAS6220', 'FAS8020', 'FAS8060', 'FAS8200', 'N10-S6100', 'UCS-FI-6', 'VMware ESX', 'cisco AIR-CAP', 'cisco AIR-AP', 'cisco AIR-LAP', 'cisco C9120AXI', 'Cisco IP Phone', 'Communicator (', 'Cisco ATA 1', 'Polycom SoundPoint IP', 'Polycom VVX']
   #IgnoreList = ['FAS6220', 'FAS8020', 'FAS8060', 'FAS8200', 'N10-S6100', 'UCS-FI-6', 'VMware ESX', 'Cisco IP Phone', 'Communicator (', 'Cisco ATA 1', 'Polycom SoundPoint IP', 'Polycom VVX']
   FailedToConnect = []
 
@@ -357,6 +357,7 @@ def main ():
       count = count + 1
       id = ToBeScannedList.pop(0)
       name = id[0]
+      orgName = name
       #some of our devices have info like '(SSI151306CJ)' in the name returned, removing this as most also have bad info for IP address
       i = name.find('(')
       if i > 0:
@@ -437,8 +438,9 @@ def main ():
       if error[0] == ';':
         error = error[2:]
       
-      ScannedListFull.append([name, lip, remote, SysDevice, desc, error])
-      ScannedList.append([name, lip, remote])
+      #orgName replaced name in following 2 because of loop created on ones "fixed"...
+      ScannedListFull.append([orgName, lip, remote, SysDevice, desc, error])
+      ScannedList.append([orgName, lip, remote])
 
       for item in inv:
         if (item not in ScannedList) and (item not in ToBeScannedList):
