@@ -309,6 +309,11 @@ def hostlookup(n, i):
 
 
 def main ():
+  printDifferences = True
+  printFailed = True
+  #printDifferences = False
+  #printFailed = False
+
   ScannedList = []
   ToBeScannedList = []
   ScannedListFull = []
@@ -345,13 +350,17 @@ def main ():
 
   #temporary break point for now.
   count = 0
-  maxCount = 3
+  maxCount = 10
   if follow == True:
 #    while (len(ToBeScannedList) > 0) and (count < maxCount):
     while (len(ToBeScannedList) > 0):
       count = count + 1
       id = ToBeScannedList.pop(0)
       name = id[0]
+      #some of our devices have info like '(SSI151306CJ)' in the name returned, removing this as most also have bad info for IP address
+      i = name.find('(')
+      if i > 0:
+        name = name[:i]
       lip = id[1]
       remote = id[2]
       error = ''
@@ -378,7 +387,9 @@ def main ():
         for ip in ips:
           if ip[1] == lookup:
             print "found it " + name
-
+        for item in names:
+          if item[1] == lookup:
+            print "found it " + name
         inv = combine(names, ips, remotetype)
       except EasySNMPConnectionError as excp:
         if verbose == True:
@@ -460,30 +471,32 @@ def main ():
       baseline = t1.readlines()
       current = t2.readlines()
 
-    print "--- Differences in Baseline ---"
-    for line in baseline:
-      if line not in current:    
-        print(line)
-        pass
+    if (printDifferences == True):
+      print "--- Differences in Baseline ---"
+      for line in baseline:
+        if line not in current:    
+          print(line)
+          pass
           
-    print "--- Differences in Current ---"
-    for line in current:
-      if line not in baseline:
-        print(line)
-        pass
+      print "--- Differences in Current ---"
+      for line in current:
+        if line not in baseline:
+          print(line)
+          pass
 
 
-    print "--- Failed to Connect to ---"
-    for line in FailedToConnect:
-      print line
+    if (printFailed == True):
+      print "--- Failed to Connect to ---"
+      for line in FailedToConnect:
+        print line
 
   else:
     print ToBeScannedList
 
 
 try:
-     opts, args = getopt.getopt(sys.argv[1:], "c:d:fiv",
-     [ 'community=', 'device=', 'ignore', 'verbose', 'follow' ]
+     opts, args = getopt.getopt(sys.argv[1:], "c:d:l:fiv",
+     [ 'community=', 'device=', 'lookup=', 'ignore', 'verbose', 'follow' ]
      )
 except getopt.error:
      usage()
@@ -501,6 +514,8 @@ for opt, val in opts:
         follow = True
     if opt in ('-v', '--verbose'):
         verbose = True
+    if opt in ('-l', '--lookup'):
+        lookup = val
 
 
 
