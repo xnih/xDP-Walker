@@ -206,36 +206,6 @@ def IsTrunk(session):
   return list
 
 
-def test(hname, cname, SNMPVersion):
-  list = []
-  try:
-    session = Session(hostname=hname, community=cname, version=SNMPVersion)
-
-    description = session.get('.1.3.6.1.2.1.1.1.0')
-    SysDevice = session.get('.1.3.6.1.4.1.9.5.1.2.16.0')
-    ifDesc = session.get('.1.3.6.1.2.1.2.2.1.2')
-    if verbose == True:
-      print ifDesc
-
-    testOID = '1.3.6.1.2.1.2.2.1.3'
-
-    system_items = session.walk(testOID)
-
-    for item in system_items:
-      if verbose == True:
-        print '{oid}.{oid_index} {snmp_type} = {value}'.format(
-          oid=item.oid,
-          oid_index=item.oid_index,
-          snmp_type=item.snmp_type,
-          value=item.value
-        )
-
-
-  except Exception as excp:
-     print (excp)
-
-  return list
-
 def combine (list1, list2, list3):
   tlist = []
   list = []
@@ -249,6 +219,7 @@ def combine (list1, list2, list3):
         list.append([titem[1], titem[2], item3[1]])
   return list
 
+
 def hostlookup(n, i):
   info1 = ''
   info2 = ''
@@ -261,48 +232,48 @@ def hostlookup(n, i):
     an = socket.gethostbyaddr(i)
     if verbose == True:
       print (n + ' ' + i)
-    if an[2][0] <> i:
+    if an[2][0] != i:
       info1 = 'hostname does not match ip in dns'
       if verbose == True:
-        print info1
-        print an
+        print (info1)
+        print (an)
     if an[0] == '':
       info2 = 'hostname not in dns'
       if verbose == True:
-        print info2
-        print an
+        print (info2)
+        print (an)
   except:
     info5 = 'ip does not exist in dns - exception'
 
   try:
     ai = socket.gethostbyname(n)  
-    if ai <> i:
+    if ai != i:
       info3 = 'ip does not match name in dns'
       if verbose == True:
-        print info3
-        print ai
+        print (info3)
+        print (ai)
     if ai[0] == '':
       info4 = 'hostname not in dns'
       if verbose == True:
-        print info4
-        print ai
+        print (info4)
+        print (ai)
   except:
     info6 = 'hostname not in dns - exception'
 
   info = ''
-  if info1 <> '':
+  if info1 != '':
     info = info + '; ' + info1
-  if info2 <> '':
+  if info2 != '':
     info = info + '; ' + info2
-  if info3 <> '':
+  if info3 != '':
     info = info + '; ' + info3
-  if info4 <> '':
+  if info4 != '':
     info = info + '; ' + info4
-  if info5 <> '':
+  if info5 != '':
     info = info + '; ' + info5
-  if info6 <> '':
+  if info6 != '':
     info = info + '; ' + info6
-  if info <> '':
+  if info != '':
    info = info[2:]
 
   return info
@@ -387,14 +358,14 @@ def main ():
 #        speeds=ifSpeed(session)
         for ip in ips:
           if ip[1] == lookup:
-            print "found it " + name
+            print ("found it " + name)
         for item in names:
           if item[1] == lookup:
-            print "found it " + name
+            print ("found it " + name)
         inv = combine(names, ips, remotetype)
       except EasySNMPConnectionError as excp:
         if verbose == True:
-          print "  failed to connect by Name, retrying with IP"
+          print ("  failed to connect by Name, retrying with IP")
         error = "failed to connect by Name"
 
         try:
@@ -417,19 +388,19 @@ def main ():
           inv = combine(names, ips, remotetype)
         except EasySNMPConnectionError as excp:
           if verbose == True:
-            print "  failed to connect by IP"
+            print ("  failed to connect by IP")
           error = "failed to connect by Name and IP"
           FailedToConnect.append([name, lip, remote, SysDevice, desc, error])
 
         except EasySNMPTimeoutError as excp:
           if verbose == True:
-            print "  timeout by Name"
+            print ("  timeout by Name")
           error = "timed out"
           FailedToConnect.append([name, lip, remote, SysDevice, desc, error])
 
       except EasySNMPTimeoutError as excp:
         if verbose == True:
-          print "  timeout by Name"
+          print ("  timeout by Name")
         error = "timed out"
         FailedToConnect.append([name, lip, remote, SysDevice, desc, error])
 
@@ -437,7 +408,7 @@ def main ():
       error = error + '; ' + info
       if error[0] == ';':
         error = error[2:]
-      
+
       #orgName replaced name in following 2 because of loop created on ones "fixed"...
       ScannedListFull.append([orgName, lip, remote, SysDevice, desc, error])
       ScannedList.append([orgName, lip, remote])
@@ -474,26 +445,26 @@ def main ():
       current = t2.readlines()
 
     if (printDifferences == True):
-      print "--- Differences in Baseline ---"
+      print ("--- Differences in Baseline ---")
       for line in baseline:
-        if line not in current:    
-          print(line)
+        if line not in current:
+          print (line)
           pass
-          
-      print "--- Differences in Current ---"
+
+      print ("--- Differences in Current ---")
       for line in current:
         if line not in baseline:
-          print(line)
+          print (line)
           pass
 
 
     if (printFailed == True):
-      print "--- Failed to Connect to ---"
+      print ("--- Failed to Connect to ---")
       for line in FailedToConnect:
-        print line
+        print (line)
 
   else:
-    print ToBeScannedList
+    print (ToBeScannedList)
 
 
 try:
