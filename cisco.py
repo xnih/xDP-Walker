@@ -425,7 +425,7 @@ def main ():
       if verbose == True:
         print ("Scanned:  " + str(len(ScannedList)) + " Left: " + str(len(ToBeScannedList)))
 
-    with open('current.csv', 'wb') as csvfile:
+    with open('current.csv', 'w') as csvfile:
       current = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
       current.writerow(["name", "ip", "remote", "model", "description", "error"])
       for item in ScannedListFull:
@@ -434,7 +434,7 @@ def main ():
     if os.path.isfile('baseline.csv'):
       pass
     else:
-      with open('baseline.csv', 'wb') as csvfile:
+      with open('baseline.csv', 'w') as csvfile:
         baseline = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
         baseline.writerow(["name", "ip", "remote", "model", "description", "error"])
         for item in ScannedListFull:
