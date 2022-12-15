@@ -364,8 +364,8 @@ def main ():
         if verbose == True:
           print ("connecting to:  " + name + "(" + lip + ")")
         session = Session(hostname=name, community=community, version=2)
-        #description = session.get('.1.3.6.1.2.1.1.1.0')
-        description = session.get('sysDescr.0')
+        description = session.get('.1.3.6.1.2.1.1.1.0')
+        #description = session.get('sysDescr.0')
         desc = description.value.replace('\r\n', ';')
         desc = desc.replace(',', '')
         desc = desc.encode('utf-8').strip()
