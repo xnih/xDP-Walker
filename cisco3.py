@@ -332,9 +332,18 @@ def main ():
 #    print inv
 
     #populate scan list
+#    for item in inv:
+#      if (item not in ToBeScannedList):
+#        ToBeScannedList.append(item)
     for item in inv:
-      if (item not in ToBeScannedList):
-        ToBeScannedList.append(item)
+      if (item not in ScannedList) and (item not in ToBeScannedList):
+         found = 0
+         for ignoreitem in IgnoreList:
+           if item[2].find(ignoreitem) != -1:
+             found = 1
+         #we only add it if it wasn't found in the ignore list
+         if found == 0:
+           ToBeScannedList.append(item)
 
   except Exception as excp:
      print (excp)
